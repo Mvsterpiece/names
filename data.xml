@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<data>
+    <person>
+        <id>1</id>
+        <name>Иван</name>
+        <gender>М</gender>
+        <nativeName>Иванов</nativeName>
+        <foreignName>John</foreignName>
+    </person>
+    <person>
+        <id>2</id>
+        <name>Мария</name>
+        <gender>Ж</gender>
+        <nativeName>Смирнова</nativeName>
+        <foreignName>Mary</foreignName>
+    </person>
+</data>
