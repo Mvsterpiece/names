@@ -1,20 +1,25 @@
 <?php
-// Загрузка XML-файла
+// Load XML file
 $xml = new DOMDocument;
 $xml->load('data.xml');
 
-// Загрузка XSLT-файла
+// Load XSLT file
 $xslt = new DOMDocument;
 $xslt->load('main.xslt');
 
-// Создание процессора XSLT
+// Create XSLT processor
 $proc = new XSLTProcessor;
 $proc->importStyleSheet($xslt);
 
-// Установка параметра поиска
+// Set search parameter
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
+
+// Enable PHP functions in XSLT
+$proc->registerPHPFunctions();
+
+// Set search parameter after creating XSLT processor
 $proc->setParameter('', 'search', $searchTerm);
 
-// Преобразование XML с использованием XSLT и вывод результата
+// Transform XML using XSLT and output the result
 echo $proc->transformToXML($xml);
 ?>
