@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xsl:stylesheet version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform">
 
-    <!-- Преобразование в HTML -->
+    <xsl:param name="search"></xsl:param>
+
     <xsl:template match="/">
         <html>
             <head>
@@ -61,16 +62,13 @@
             <body>
                 <h2>Names Data</h2>
 
-                <!-- Форма поиска -->
                 <form>
                     <input type="text" name="search" placeholder="Search..." />
                     <input type="submit" value="Search" />
                 </form>
 
-                <!-- Применение шаблонов в зависимости от наличия параметра поиска -->
                 <xsl:choose>
                     <xsl:when test="string-length(normalize-space($search)) > 0">
-                        <!-- Если есть параметр поиска, применяем шаблон для отображения найденных данных -->
                         <table>
                             <tr>
                                 <th>ID</th>
@@ -79,11 +77,10 @@
                                 <th>Native Name</th>
                                 <th>Foreign Name</th>
                             </tr>
-                            <xsl:apply-templates select="data/person[contains(name, normalize-space($search))]"/>
+                            <xsl:apply-templates select="data/person[contains(nativeName, normalize-space($search))]"/>
                         </table>
                     </xsl:when>
                     <xsl:otherwise>
-                        <!-- Если параметр поиска отсутствует или пуст, выводим полную таблицу -->
                         <table>
                             <tr>
                                 <th>ID</th>
@@ -100,7 +97,6 @@
         </html>
     </xsl:template>
 
-    <!-- Шаблон для отображения заголовка таблицы -->
     <xsl:template match="/data">
         <tr>
             <th>ID</th>
@@ -111,7 +107,6 @@
         </tr>
     </xsl:template>
 
-    <!-- Шаблон для отображения найденных данных -->
     <xsl:template match="person">
         <tr>
             <td><xsl:value-of select="id"/></td>
