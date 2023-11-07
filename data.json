@@ -1,0 +1,20 @@
+{
+    "person": [
+        {
+            "#text": "\n    ",
+            "id": "1",
+            "name": "\u0418\u0432\u0430\u043d",
+            "gender": "\u041c",
+            "nativeName": "\u0418\u0432\u0430\u043d\u043e\u0432",
+            "foreignName": "John"
+        },
+        {
+            "#text": "\n    ",
+            "id": "2",
+            "name": "\u041c\u0430\u0440\u0438\u044f",
+            "gender": "\u0416",
+            "nativeName": "\u041c\u0430\u0440\u044c\u044f\u043d\u043d\u0430",
+            "foreignName": "Mary"
+        }
+    ]
+}
