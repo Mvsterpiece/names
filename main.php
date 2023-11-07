@@ -1,3 +1,4 @@
+<?php if (isset($_GET['code'])) { die(highlight_file('data.xml', 1)); } ?>
 <?php
 
 function deletePerson($id) {
@@ -12,30 +13,45 @@ function deletePerson($id) {
     }
 
     $xml->save('data.xml');
+    updateJsonFile($xml);
+}
+function xmlToArray($xml) {
+    $array = [];
+
+    foreach ($xml->getElementsByTagName('person') as $person) {
+        $personData = [];
+        foreach ($person->childNodes as $node) {
+            $personData[$node->nodeName] = $node->nodeValue;
+        }
+        $array['person'][] = $personData;
+    }
+
+    return $array;
 }
 
-// Check if delete request is received
+
+function updateJsonFile($xml) {
+    $data = xmlToArray($xml);
+
+    $json = json_encode($data, JSON_PRETTY_PRINT);
+
+    file_put_contents('data.json', $json);
+}
+
+
 if (isset($_GET['deleteId'])) {
     $deleteId = $_GET['deleteId'];
     deletePerson($deleteId);
-
-    // Redirect back to main.php to display the updated data
     header('Location: main.php');
     exit();
 }
 
-
-
-
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    // Form submitted, process the data and update XML
-
     $xml = new DOMDocument;
     $xml->load('data.xml');
 
-    // Get form data
     $newPerson = $xml->createElement('person');
-    $newPerson->appendChild($xml->createElement('id', $xml->getElementsByTagName('person')->length + 1)); // Assuming ID is auto-incremented
+    $newPerson->appendChild($xml->createElement('id', $xml->getElementsByTagName('person')->length + 1));
     $newPerson->appendChild($xml->createElement('name', $_POST['newName']));
     $newPerson->appendChild($xml->createElement('gender', $_POST['newGender']));
     $newPerson->appendChild($xml->createElement('nativeName', $_POST['newNative']));
@@ -43,33 +59,24 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $xml->documentElement->appendChild($newPerson);
     $xml->save('data.xml');
+    updateJsonFile($xml);
 
-    // Redirect back to main.php to display the updated data
     header('Location: main.php');
     exit();
 }
 
-// Load XML file
 $xml = new DOMDocument;
 $xml->load('data.xml');
 
-// Load XSLT file
 $xslt = new DOMDocument;
 $xslt->load('main.xslt');
 
-// Create XSLT processor
 $proc = new XSLTProcessor;
 $proc->importStyleSheet($xslt);
 
-// Set search parameter
 $searchTerm = isset($_GET['search']) ? $_GET['search'] : '';
-
-// Set search parameter after creating XSLT processor
 $proc->setParameter('', 'search', $searchTerm);
-
-// Enable PHP functions in XSLT
 $proc->registerPHPFunctions();
 
-// Transform XML using XSLT and output the result
 echo $proc->transformToXML($xml);
 ?>
